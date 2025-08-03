@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Juri</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 30px; background: #f0f0f0; }
+    input, button { margin: 5px; padding: 10px; font-size: 16px; }
+    .btn { width: 100px; }
+  </style>
+</head>
+<body>
+  <h1>Panel Juri</h1>
+
+  <div>
+    <input id="namaMerah" placeholder="Nama Merah">
+    <input id="namaBiru" placeholder="Nama Biru">
+    <button onclick="setNama()">Set Nama</button>
+  </div>
+
+  <div style="margin-top:20px;">
+    <h3>Skor Merah</h3>
+    <button class="btn" onclick="tambah('merah')">+1</button>
+    <button class="btn" onclick="kurang('merah')">-1</button>
+  </div>
+
+  <div>
+    <h3>Skor Biru</h3>
+    <button class="btn" onclick="tambah('biru')">+1</button>
+    <button class="btn" onclick="kurang('biru')">-1</button>
+  </div>
+
+  <div style="margin-top:20px;">
+    <button onclick="reset()">Reset Semua</button>
+  </div>
+
+  <script>
+    function tambah(warna) {
+      let key = 'skor_' + warna;
+      let skor = parseInt(localStorage.getItem(key)) || 0;
+      localStorage.setItem(key, skor + 1);
+    }
+
+    function kurang(warna) {
+      let key = 'skor_' + warna;
+      let skor = parseInt(localStorage.getItem(key)) || 0;
+      if (skor > 0) localStorage.setItem(key, skor - 1);
+    }
+
+    function setNama() {
+      localStorage.setItem('pesilat_merah', document.getElementById('namaMerah').value);
+      localStorage.setItem('pesilat_biru', document.getElementById('namaBiru').value);
+    }
+
+    function reset() {
+      localStorage.clear();
+      alert("Skor & nama sudah direset");
+    }
+  </script>
+</body>
+</html>
