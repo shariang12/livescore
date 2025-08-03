@@ -1,123 +1,136 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Live Score IPSI</title>
+  <meta charset="UTF-8">
+  <title>ZBond Score | by: Shariang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      margin: 0;
-      font-family: Arial Black, sans-serif;
       background: #000;
       color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .marquee {
+      background: #222;
+      padding: 10px;
+      font-size: 20px;
+      white-space: nowrap;
       overflow: hidden;
     }
-    .marquee {
-      background: #111;
-      color: #0f0;
-      padding: 12px;
-      font-size: 26px;
-      font-weight: bold;
+
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 15s linear infinite;
     }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
     .scoreboard {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-      height: calc(100vh - 100px);
-      padding: 0 20px;
-    }
-    .corner {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-    .merah { background: red; }
-    .biru  { background: blue; }
-    .perguruan {
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .nama {
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-    .skor {
-      font-size: 120px;
-      font-weight: bold;
-    }
-    .ronde-box {
-      width: 200px;
-      height: 200px;
-      background: #fff;
-      color: #000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
+      margin: 20px 0;
       font-size: 32px;
+    }
+
+    .pesilat {
+      width: 30%;
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    .merah {
+      background: red;
+      color: white;
+    }
+
+    .biru {
+      background: blue;
+      color: white;
+    }
+
+    .ronde {
+      font-size: 28px;
+    }
+
+    .perguruan {
+      font-size: 20px;
       font-weight: bold;
+    }
+
+    #timer {
+      font-size: 40px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .scoreboard {
+        flex-direction: column;
+        font-size: 24px;
+      }
+      .pesilat {
+        width: 80%;
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="marquee">
-    <marquee behavior="scroll" direction="left" id="teksBerjalan">...</marquee>
-  </div>
+  <div class="marquee"><span id="marqueeText">Selamat datang di Kejuaraan Pencak Silat</span></div>
 
   <div class="scoreboard">
-    <div class="corner merah">
-      <div class="perguruan" id="perguruanMerah">PERGURUAN MERAH</div>
-      <div class="nama" id="namaMerah">MERAH</div>
-      <div class="skor" id="skorMerah">0</div>
+    <div class="pesilat merah">
+      <div class="perguruan" id="perguruanMerah">Perguruan Merah</div>
+      <div id="namaMerah">Merah</div>
+      <div id="skorMerah">0</div>
     </div>
 
-    <div class="ronde-box">
-      RONDE<br><span id="ronde">1</span>
+    <div class="ronde">
+      <div>RONDE</div>
+      <div id="ronde">1</div>
+      <div id="timer">00:00</div>
     </div>
 
-    <div class="corner biru">
-      <div class="perguruan" id="perguruanBiru">PERGURUAN BIRU</div>
-      <div class="nama" id="namaBiru">BIRU</div>
-      <div class="skor" id="skorBiru">0</div>
+    <div class="pesilat biru">
+      <div class="perguruan" id="perguruanBiru">Perguruan Biru</div>
+      <div id="namaBiru">Biru</div>
+      <div id="skorBiru">0</div>
     </div>
   </div>
 
   <script>
-    function getValidSkor(warna) {
-      let total = 0;
-      let count = 0;
-
-      for (let i = 1; i <= 3; i++) {
-        const nilai = parseInt(localStorage.getItem(`skor_${warna}_juri${i}`));
-        if (!isNaN(nilai)) {
-          total += nilai;
-          count++;
-        }
-      }
-
-      return count >= 2 ? Math.round(total / count) : 0;
-    }
-
-    function update() {
-      document.getElementById('skorMerah').innerText = getValidSkor('merah');
-      document.getElementById('skorBiru').innerText = getValidSkor('biru');
-
-      document.getElementById('namaMerah').innerText = localStorage.getItem('nama_merah')?.toUpperCase() || 'MERAH';
-      document.getElementById('namaBiru').innerText = localStorage.getItem('nama_biru')?.toUpperCase() || 'BIRU';
-      document.getElementById('perguruanMerah').innerText = localStorage.getItem('perguruan_merah')?.toUpperCase() || '';
-      document.getElementById('perguruanBiru').innerText = localStorage.getItem('perguruan_biru')?.toUpperCase() || '';
+    function updateTampilan() {
+      document.getElementById('skorMerah').innerText = localStorage.getItem('skor_merah') || 0;
+      document.getElementById('skorBiru').innerText = localStorage.getItem('skor_biru') || 0;
+      document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah') || 'Merah';
+      document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru') || 'Biru';
+      document.getElementById('perguruanMerah').innerText = localStorage.getItem('perguruan_merah') || 'Perguruan Merah';
+      document.getElementById('perguruanBiru').innerText = localStorage.getItem('perguruan_biru') || 'Perguruan Biru';
       document.getElementById('ronde').innerText = localStorage.getItem('ronde') || '1';
-      document.getElementById('teksBerjalan').innerText = localStorage.getItem('marquee') || 'Kejurda IPSI Situbondo 2025';
+      document.getElementById('marqueeText').innerText = localStorage.getItem('marquee') || 'Kejuaraan Pencak Silat Nasional';
     }
 
-    setInterval(update, 300);
-  </script>
+    function updateTimer() {
+      let waktu = parseInt(localStorage.getItem('waktu_aktif') || 0);
+      let menit = Math.floor(waktu / 60);
+      let detik = waktu % 60;
+      document.getElementById('timer').innerText =
+        (menit < 10 ? '0' + menit : menit) + ':' + (detik < 10 ? '0' + detik : detik);
+    }
 
+    setInterval(() => {
+      updateTampilan();
+      updateTimer();
+    }, 500);
+  </script>
 </body>
 </html>
