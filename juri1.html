@@ -2,50 +2,87 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juri 1</title>
+  <title>Input Nilai Juri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; background: #f4f4f4; text-align: center; padding: 20px; }
-    button {
-      font-size: 24px;
-      margin: 10px;
-      padding: 20px;
-      border: none;
-      border-radius: 10px;
+    body {
+      font-family: sans-serif;
+      background: #000;
       color: #fff;
-      width: 100px;
+      text-align: center;
+      padding: 20px;
     }
-    .btn-merah { background: red; }
-    .btn-biru  { background: blue; }
-    .btn-reset { background: #333; margin-top: 20px; }
+
+    .pesilat {
+      margin-bottom: 40px;
+    }
+
+    .judul {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .nilai-btn {
+      border: none;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 15px;
+      cursor: pointer;
+      width: 100px;
+      height: 100px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .nilai-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .merah .nilai-btn {
+      background-color: red;
+    }
+
+    .biru .nilai-btn {
+      background-color: blue;
+    }
+
+    .nilai-btn img {
+      width: 60px;
+      height: 60px;
+      filter: brightness(0); /* jadikan gambar hitam */
+    }
   </style>
 </head>
 <body>
-  <h1>Panel Juri 1</h1>
+  <h2>Input Nilai Juri</h2>
 
-  <h2>Merah</h2>
-  <button class="btn-merah" onclick="tambah('merah',1)">+1</button>
-  <button class="btn-merah" onclick="tambah('merah',2)">+2</button>
-  <button class="btn-merah" onclick="tambah('merah',3)">+3</button>
+  <div class="pesilat merah">
+    <div class="judul">Pesilat Merah</div>
+    <button class="nilai-btn" onclick="tambahNilai('skor_merah', 1)">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhYD500D93H7rPod_89H6WLkkbBVSt0jnQij59jmyZZQ_-3pdW2m3xmfJLmWQP5BZP6BwNa8ZvPoARs9y2c2vWBjZjkmjlB0nY2-SahrxSc7x_g2f4eA3h3O12Hvl60Jtly7govbfRlfZ0B2F8ODfyPBjgSvkrzYN_P-xW0YFqQ6K5HYRw2lHxyQLT7WQ/s1000/1000131440.png" alt="Pukulan">
+    </button>
+    <button class="nilai-btn" onclick="tambahNilai('skor_merah', 2)">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEinWHg5A3mx3yAcYzBL4wJeS64LH4mKLzsEDY47j3Uw2xDLnvdTUrPioIcrRNQGAV5zcCyyX_yfqmbRZnboqPlni12k1HWdRHf-wTSemGH99oFyQGW8uOr4-DcnlpalEcWjKaBNwuWFq6oJ0S8UhKt_FHsxxomVtZ03Rr7XQZwZ1WYOLPvzfNMNB3JDnA/s1000/1000131439.png" alt="Tendangan">
+    </button>
+  </div>
 
-  <h2>Biru</h2>
-  <button class="btn-biru" onclick="tambah('biru',1)">+1</button>
-  <button class="btn-biru" onclick="tambah('biru',2)">+2</button>
-  <button class="btn-biru" onclick="tambah('biru',3)">+3</button>
-
-  <br><br>
-  <button class="btn-reset" onclick="reset()">🔄 Reset</button>
+  <div class="pesilat biru">
+    <div class="judul">Pesilat Biru</div>
+    <button class="nilai-btn" onclick="tambahNilai('skor_biru', 1)">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhYD500D93H7rPod_89H6WLkkbBVSt0jnQij59jmyZZQ_-3pdW2m3xmfJLmWQP5BZP6BwNa8ZvPoARs9y2c2vWBjZjkmjlB0nY2-SahrxSc7x_g2f4eA3h3O12Hvl60Jtly7govbfRlfZ0B2F8ODfyPBjgSvkrzYN_P-xW0YFqQ6K5HYRw2lHxyQLT7WQ/s1000/1000131440.png" alt="Pukulan">
+    </button>
+    <button class="nilai-btn" onclick="tambahNilai('skor_biru', 2)">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEinWHg5A3mx3yAcYzBL4wJeS64LH4mKLzsEDY47j3Uw2xDLnvdTUrPioIcrRNQGAV5zcCyyX_yfqmbRZnboqPlni12k1HWdRHf-wTSemGH99oFyQGW8uOr4-DcnlpalEcWjKaBNwuWFq6oJ0S8UhKt_FHsxxomVtZ03Rr7XQZwZ1WYOLPvzfNMNB3JDnA/s1000/1000131439.png" alt="Tendangan">
+    </button>
+  </div>
 
   <script>
-    function tambah(warna, nilai) {
-      let key = `skor_${warna}_juri1`;
-      let skor = parseInt(localStorage.getItem(key)) || 0;
-      localStorage.setItem(key, skor + nilai);
-    }
-
-    function reset() {
-      localStorage.setItem('skor_merah_juri1', 0);
-      localStorage.setItem('skor_biru_juri1', 0);
+    function tambahNilai(kunci, nilai) {
+      let skor = parseInt(localStorage.getItem(kunci) || 0);
+      skor += nilai;
+      localStorage.setItem(kunci, skor);
     }
   </script>
 </body>
