@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Skor Pencak Silat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #007166;
+      margin-bottom: 30px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .menu a {
+      display: block;
+      padding: 20px;
+      background-color: #007166;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .menu a:hover {
+      background-color: #005f57;
+      transform: scale(1.03);
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Dashboard Skor Pencak Silat</h1>
+
+  <div class="menu">
+    <a href="index.html" target="_blank">📺 Live Score</a>
+    <a href="operator.html" target="_blank">🧑‍💼 Operator</a>
+    <a href="data.html" target="_blank">📋 Acak Pertandingan</a>
+    <a href="juri1.html" target="_blank">🥇 Juri 1</a>
+    <a href="juri2.html" target="_blank">🥈 Juri 2</a>
+    <a href="juri3.html" target="_blank">🥉 Juri 3</a>
+  </div>
+
+  <footer>
+    Sistem Skor IPSI | © 2025 by Shariang Production
+  </footer>
+
+</body>
+</html>
