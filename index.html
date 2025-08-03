@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>ZBond Score | by: Shariang</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>ZBond Score | Live Score</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
       margin: 0;
       padding: 0;
+      font-family: 'Arial Black', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
     }
 
     .marquee {
-      background: #222;
+      background: #111;
+      color: #0f0;
+      font-size: 28px;
       padding: 10px;
-      font-size: 20px;
       white-space: nowrap;
       overflow: hidden;
     }
@@ -25,7 +30,7 @@
     .marquee span {
       display: inline-block;
       padding-left: 100%;
-      animation: marquee 15s linear infinite;
+      animation: marquee 20s linear infinite;
     }
 
     @keyframes marquee {
@@ -34,76 +39,115 @@
     }
 
     .scoreboard {
-      display: flex;
-      justify-content: space-around;
+      display: grid;
+      grid-template-columns: 1fr 0.5fr 1fr;
+      height: calc(100vh - 60px);
       align-items: center;
-      margin: 20px 0;
-      font-size: 32px;
+      text-align: center;
     }
 
     .pesilat {
-      width: 30%;
       padding: 20px;
-      border-radius: 15px;
     }
 
     .merah {
       background: red;
-      color: white;
+      height: 100%;
     }
 
     .biru {
       background: blue;
-      color: white;
+      height: 100%;
     }
 
-    .ronde {
-      font-size: 28px;
-    }
-
-    .perguruan {
-      font-size: 20px;
+    .pesilat .perguruan {
+      font-size: 32px;
       font-weight: bold;
+      margin-bottom: 10px;
     }
 
-    #timer {
-      font-size: 40px;
-      margin-top: 10px;
+    .pesilat .nama {
+      font-size: 48px;
+    }
+
+    .pesilat .skor {
+      font-size: 120px;
+      margin-top: 20px;
+    }
+
+    .status {
+      font-size: 20px;
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .tengah {
+      background: #000;
+      color: #fff;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tengah .ronde {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    .tengah .timer {
+      font-size: 80px;
+      font-weight: bold;
     }
 
     @media (max-width: 768px) {
       .scoreboard {
-        flex-direction: column;
-        font-size: 24px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 0.5fr 1fr;
       }
-      .pesilat {
-        width: 80%;
-        margin-bottom: 20px;
+
+      .pesilat .skor {
+        font-size: 80px;
+      }
+
+      .tengah .ronde {
+        font-size: 40px;
+      }
+
+      .tengah .timer {
+        font-size: 60px;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="marquee"><span id="marqueeText">Selamat datang di Kejuaraan Pencak Silat</span></div>
+  <div class="marquee"><span id="marqueeText">SELAMAT DATANG DI KEJUARAAN PENCAK SILAT</span></div>
 
   <div class="scoreboard">
+    <!-- Pesilat Merah -->
     <div class="pesilat merah">
       <div class="perguruan" id="perguruanMerah">Perguruan Merah</div>
-      <div id="namaMerah">Merah</div>
-      <div id="skorMerah">0</div>
+      <div class="nama" id="namaMerah">MERAH</div>
+      <div class="skor" id="skorMerah">0</div>
+      <div class="status" id="statusMerah">-</div>
     </div>
 
-    <div class="ronde">
-      <div>RONDE</div>
-      <div id="ronde">1</div>
-      <div id="timer">00:00</div>
+    <!-- Tengah -->
+    <div class="tengah">
+      <div class="ronde">RONDE <span id="ronde">1</span></div>
+      <div class="timer" id="timer">00:00</div>
     </div>
 
+    <!-- Pesilat Biru -->
     <div class="pesilat biru">
       <div class="perguruan" id="perguruanBiru">Perguruan Biru</div>
-      <div id="namaBiru">Biru</div>
-      <div id="skorBiru">0</div>
+      <div class="nama" id="namaBiru">BIRU</div>
+      <div class="skor" id="skorBiru">0</div>
+      <div class="status" id="statusBiru">-</div>
     </div>
   </div>
 
@@ -111,12 +155,26 @@
     function updateTampilan() {
       document.getElementById('skorMerah').innerText = localStorage.getItem('skor_merah') || 0;
       document.getElementById('skorBiru').innerText = localStorage.getItem('skor_biru') || 0;
-      document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah') || 'Merah';
-      document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru') || 'Biru';
+      document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah') || 'MERAH';
+      document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru') || 'BIRU';
       document.getElementById('perguruanMerah').innerText = localStorage.getItem('perguruan_merah') || 'Perguruan Merah';
       document.getElementById('perguruanBiru').innerText = localStorage.getItem('perguruan_biru') || 'Perguruan Biru';
       document.getElementById('ronde').innerText = localStorage.getItem('ronde') || '1';
-      document.getElementById('marqueeText').innerText = localStorage.getItem('marquee') || 'Kejuaraan Pencak Silat Nasional';
+      document.getElementById('marqueeText').innerText = localStorage.getItem('marquee') || 'KEJUARAAN PENCAK SILAT NASIONAL';
+
+      // Status Dewan
+      const statusMerah = formatStatus(
+        localStorage.getItem('teguran_merah'),
+        localStorage.getItem('pelanggaran_merah'),
+        localStorage.getItem('diskualifikasi_merah')
+      );
+      const statusBiru = formatStatus(
+        localStorage.getItem('teguran_biru'),
+        localStorage.getItem('pelanggaran_biru'),
+        localStorage.getItem('diskualifikasi_biru')
+      );
+      document.getElementById('statusMerah').innerText = statusMerah;
+      document.getElementById('statusBiru').innerText = statusBiru;
     }
 
     function updateTimer() {
@@ -125,6 +183,14 @@
       let detik = waktu % 60;
       document.getElementById('timer').innerText =
         (menit < 10 ? '0' + menit : menit) + ':' + (detik < 10 ? '0' + detik : detik);
+    }
+
+    function formatStatus(teguran, pelanggaran, diskualifikasi) {
+      let status = [];
+      if (teguran) status.push("Teguran " + teguran);
+      if (pelanggaran) status.push("Pelanggaran " + pelanggaran);
+      if (diskualifikasi === '1') status.push("Diskualifikasi");
+      return status.length ? status.join(', ') : '-';
     }
 
     setInterval(() => {
