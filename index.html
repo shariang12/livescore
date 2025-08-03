@@ -1,9 +1,8 @@
-<!-- score.html -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Live Skor Pencak Silat</title>
+  <title>Live Score Pencak Silat</title>
   <style>
     body { font-family: Arial; text-align: center; background: #000; color: #fff; }
     .kotak { display: flex; justify-content: space-around; font-size: 32px; margin-top: 50px; }
@@ -32,8 +31,6 @@
       document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah') || 'Merah';
       document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru') || 'Biru';
     }
-
-    // Refresh setiap 500ms
     setInterval(updateTampilan, 500);
   </script>
 </body>
