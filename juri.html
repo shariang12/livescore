@@ -4,9 +4,29 @@
   <meta charset="UTF-8">
   <title>Panel Juri</title>
   <style>
-    body { font-family: Arial; text-align: center; padding: 30px; background: #f0f0f0; }
-    input, button { margin: 5px; padding: 10px; font-size: 16px; }
-    .btn { width: 100px; }
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 30px;
+      background: #f0f0f0;
+    }
+    input, button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .btn {
+      width: 80px;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .merah { background-color: red; }
+    .biru { background-color: blue; }
+    .merah-minus { background-color: darkred; }
+    .biru-minus { background-color: darkblue; }
+    .section { margin-top: 30px; }
   </style>
 </head>
 <body>
@@ -18,33 +38,45 @@
     <button onclick="setNama()">Set Nama</button>
   </div>
 
-  <div style="margin-top:20px;">
+  <div class="section">
     <h3>Skor Merah</h3>
-    <button class="btn" onclick="tambah('merah')">+1</button>
-    <button class="btn" onclick="kurang('merah')">-1</button>
+    <div>
+      <button class="btn merah" onclick="ubahSkor('merah', 1)">+1</button>
+      <button class="btn merah" onclick="ubahSkor('merah', 2)">+2</button>
+      <button class="btn merah" onclick="ubahSkor('merah', 3)">+3</button>
+    </div>
+    <div>
+      <button class="btn merah-minus" onclick="ubahSkor('merah', -1)">-1</button>
+      <button class="btn merah-minus" onclick="ubahSkor('merah', -2)">-2</button>
+      <button class="btn merah-minus" onclick="ubahSkor('merah', -3)">-3</button>
+    </div>
   </div>
 
-  <div>
+  <div class="section">
     <h3>Skor Biru</h3>
-    <button class="btn" onclick="tambah('biru')">+1</button>
-    <button class="btn" onclick="kurang('biru')">-1</button>
+    <div>
+      <button class="btn biru" onclick="ubahSkor('biru', 1)">+1</button>
+      <button class="btn biru" onclick="ubahSkor('biru', 2)">+2</button>
+      <button class="btn biru" onclick="ubahSkor('biru', 3)">+3</button>
+    </div>
+    <div>
+      <button class="btn biru-minus" onclick="ubahSkor('biru', -1)">-1</button>
+      <button class="btn biru-minus" onclick="ubahSkor('biru', -2)">-2</button>
+      <button class="btn biru-minus" onclick="ubahSkor('biru', -3)">-3</button>
+    </div>
   </div>
 
-  <div style="margin-top:20px;">
+  <div class="section">
     <button onclick="reset()">Reset Semua</button>
   </div>
 
   <script>
-    function tambah(warna) {
+    function ubahSkor(warna, nilai) {
       let key = 'skor_' + warna;
       let skor = parseInt(localStorage.getItem(key)) || 0;
-      localStorage.setItem(key, skor + 1);
-    }
-
-    function kurang(warna) {
-      let key = 'skor_' + warna;
-      let skor = parseInt(localStorage.getItem(key)) || 0;
-      if (skor > 0) localStorage.setItem(key, skor - 1);
+      skor += nilai;
+      if (skor < 0) skor = 0;
+      localStorage.setItem(key, skor);
     }
 
     function setNama() {
