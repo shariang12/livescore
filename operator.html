@@ -1,142 +1,123 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Panel Operator</title>
+  <meta charset="UTF-8">
+  <title>Operator Score</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
+      background: #000;
+      color: #fff;
       font-family: Arial, sans-serif;
-      background: #f0f0f0;
       padding: 20px;
-      max-width: 600px;
-      margin: auto;
     }
-    h1 {
+
+    h2 {
       text-align: center;
-      margin-bottom: 30px;
     }
+
     label {
       display: block;
-      margin-top: 15px;
-      font-weight: bold;
+      margin-top: 10px;
     }
+
     input {
       width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 20px;
-      padding: 15px;
-      font-size: 18px;
-      width: 100%;
-      border: none;
+      padding: 8px;
+      margin-bottom: 15px;
       border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
       cursor: pointer;
     }
-    .btn-simpan {
-      background: #007166;
-      color: white;
-    }
-    .btn-simpan:hover {
-      background: #005a50;
-    }
-    .btn-cetak {
-      background: #222;
-      color: #fff;
-    }
-    .btn-cetak:hover {
-      background: #000;
-    }
+
+    .green { background: green; color: white; }
+    .blue { background: blue; color: white; }
+    .red { background: red; color: white; }
+    .yellow { background: gold; color: black; }
   </style>
 </head>
 <body>
+  <h2>Panel Operator</h2>
 
-  <h1>Panel Operator</h1>
+  <label>Nama Pesilat Merah</label>
+  <input type="text" id="pesilatMerah" placeholder="Contoh: Andi">
 
-  <label for="nama_merah">Nama Pesilat Merah</label>
-  <input type="text" id="nama_merah" placeholder="Contoh: ANDI SETIAWAN">
+  <label>Perguruan Merah</label>
+  <input type="text" id="perguruanMerah" placeholder="Contoh: Merpati Putih">
 
-  <label for="perguruan_merah">Perguruan Merah</label>
-  <input type="text" id="perguruan_merah" placeholder="Contoh: PERISAI DIRI">
+  <label>Nama Pesilat Biru</label>
+  <input type="text" id="pesilatBiru" placeholder="Contoh: Budi">
 
-  <label for="nama_biru">Nama Pesilat Biru</label>
-  <input type="text" id="nama_biru" placeholder="Contoh: BUDI PRATAMA">
+  <label>Perguruan Biru</label>
+  <input type="text" id="perguruanBiru" placeholder="Contoh: Tapak Suci">
 
-  <label for="perguruan_biru">Perguruan Biru</label>
-  <input type="text" id="perguruan_biru" placeholder="Contoh: TAPAK SUCI">
+  <label>Ronde</label>
+  <input type="number" id="ronde" placeholder="Contoh: 1">
 
-  <label for="ronde">Ronde</label>
-  <input type="number" id="ronde" placeholder="Contoh: 1" min="1" max="3">
+  <label>Teks Berjalan (Marquee)</label>
+  <input type="text" id="marquee" placeholder="Contoh: Kejuaraan Pencak Silat Nasional 2025">
 
-  <label for="marquee">Teks Berjalan</label>
-  <input type="text" id="marquee" placeholder="Contoh: Kejurda IPSI Situbondo 2025">
+  <label>Waktu Pertandingan (dalam detik)</label>
+  <input type="number" id="durasi" placeholder="Contoh: 120">
 
-  <button class="btn-simpan" onclick="simpan()">💾 Simpan</button>
-  <button class="btn-cetak" onclick="cetakPDF()">📄 Cetak Hasil PDF</button>
+  <button class="green" onclick="updateData()">Update Live Score</button>
 
-  <!-- jsPDF CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <h3>Kontrol Timer</h3>
+  <button class="blue" onclick="mulaiTimer()">Mulai</button>
+  <button class="yellow" onclick="jedaTimer()">Jeda</button>
+  <button class="red" onclick="resetTimer()">Reset</button>
 
   <script>
-    function simpan() {
-      localStorage.setItem('nama_merah', document.getElementById('nama_merah').value);
-      localStorage.setItem('perguruan_merah', document.getElementById('perguruan_merah').value);
-      localStorage.setItem('nama_biru', document.getElementById('nama_biru').value);
-      localStorage.setItem('perguruan_biru', document.getElementById('perguruan_biru').value);
+    let timer;
+    let berjalan = false;
+
+    function updateData() {
+      localStorage.setItem('pesilat_merah', document.getElementById('pesilatMerah').value);
+      localStorage.setItem('perguruan_merah', document.getElementById('perguruanMerah').value);
+      localStorage.setItem('pesilat_biru', document.getElementById('pesilatBiru').value);
+      localStorage.setItem('perguruan_biru', document.getElementById('perguruanBiru').value);
       localStorage.setItem('ronde', document.getElementById('ronde').value);
       localStorage.setItem('marquee', document.getElementById('marquee').value);
-      alert("✅ Data berhasil disimpan ke sistem!");
+      localStorage.setItem('durasi', document.getElementById('durasi').value);
+      alert('Live Score Diperbarui');
     }
 
-    function getValidSkor(warna) {
-      let total = 0;
-      let count = 0;
-      for (let i = 1; i <= 3; i++) {
-        const nilai = parseInt(localStorage.getItem(`skor_${warna}_juri${i}`));
-        if (!isNaN(nilai)) {
-          total += nilai;
-          count++;
+    function mulaiTimer() {
+      if (berjalan) return;
+      berjalan = true;
+      let waktu = parseInt(localStorage.getItem('durasi') || 120);
+      localStorage.setItem('waktu_aktif', waktu);
+      timer = setInterval(() => {
+        waktu--;
+        localStorage.setItem('waktu_aktif', waktu);
+        if (waktu <= 0) {
+          clearInterval(timer);
+          berjalan = false;
+          alert('Waktu Habis');
         }
-      }
-      return count >= 2 ? Math.round(total / count) : 0;
+      }, 1000);
     }
 
-    async function cetakPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+    function jedaTimer() {
+      clearInterval(timer);
+      berjalan = false;
+    }
 
-      const namaMerah = localStorage.getItem('nama_merah') || 'MERAH';
-      const perguruanMerah = localStorage.getItem('perguruan_merah') || '-';
-      const namaBiru = localStorage.getItem('nama_biru') || 'BIRU';
-      const perguruanBiru = localStorage.getItem('perguruan_biru') || '-';
-      const ronde = localStorage.getItem('ronde') || '1';
-      const skorMerah = getValidSkor('merah');
-      const skorBiru = getValidSkor('biru');
-      const now = new Date().toLocaleString('id-ID');
-
-      doc.setFontSize(18);
-      doc.text("HASIL PERTANDINGAN PENCAK SILAT", 20, 20);
-      doc.setFontSize(12);
-      doc.text(`Tanggal & Waktu: ${now}`, 20, 30);
-      doc.text(`Ronde: ${ronde}`, 20, 40);
-      doc.text(`MERAH: ${namaMerah} (${perguruanMerah}) — Skor: ${skorMerah}`, 20, 55);
-      doc.text(`BIRU : ${namaBiru} (${perguruanBiru}) — Skor: ${skorBiru}`, 20, 65);
-
-      const hasil = skorMerah > skorBiru ? `Pemenang: MERAH (${namaMerah})` :
-                    skorBiru > skorMerah ? `Pemenang: BIRU (${namaBiru})` :
-                    "Hasil: SERI";
-
-      doc.setFontSize(14);
-      doc.text(hasil, 20, 85);
-
-      doc.save(`hasil_${namaMerah}_vs_${namaBiru}.pdf`);
+    function resetTimer() {
+      let waktu = parseInt(localStorage.getItem('durasi') || 120);
+      localStorage.setItem('waktu_aktif', waktu);
+      clearInterval(timer);
+      berjalan = false;
     }
   </script>
-
 </body>
 </html>
