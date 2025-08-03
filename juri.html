@@ -1,82 +1,131 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Panel Juri</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Juri IPSI</title>
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
       text-align: center;
-      padding: 30px;
-      background: #f0f0f0;
     }
-    input, button {
-      margin: 5px;
-      padding: 10px;
+
+    h1 {
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    .input-nama {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 12px;
       font-size: 16px;
-    }
-    .btn {
-      width: 80px;
+      width: 90%;
+      max-width: 300px;
       border: none;
-      color: #fff;
       border-radius: 8px;
-      cursor: pointer;
     }
-    .merah { background-color: red; }
-    .biru { background-color: blue; }
-    .merah-minus { background-color: darkred; }
-    .biru-minus { background-color: darkblue; }
-    .section { margin-top: 30px; }
+
+    .input-merah {
+      background: red;
+      color: #fff;
+    }
+
+    .input-biru {
+      background: blue;
+      color: #fff;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 12px 16px;
+      margin: 6px;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      min-width: 80px;
+    }
+
+    .btn-merah {
+      background-color: red;
+    }
+
+    .btn-biru {
+      background-color: blue;
+    }
+
+    .btn-reset {
+      background: #333;
+      margin-top: 30px;
+      padding: 14px 30px;
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 600px) {
+      .btn-group {
+        gap: 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Panel Juri</h1>
 
-  <div>
-    <input id="namaMerah" placeholder="Nama Merah">
-    <input id="namaBiru" placeholder="Nama Biru">
-    <button onclick="setNama()">Set Nama</button>
+  <h1>Panel Juri IPSI</h1>
+
+  <div class="input-nama">
+    <input type="text" id="namaMerah" class="input-merah" placeholder="Nama Pesilat Merah">
+    <input type="text" id="namaBiru" class="input-biru" placeholder="Nama Pesilat Biru">
+    <button onclick="setNama()" style="background:#222">Set Nama</button>
   </div>
 
   <div class="section">
-    <h3>Skor Merah</h3>
-    <div>
-      <button class="btn merah" onclick="ubahSkor('merah', 1)">+1</button>
-      <button class="btn merah" onclick="ubahSkor('merah', 2)">+2</button>
-      <button class="btn merah" onclick="ubahSkor('merah', 3)">+3</button>
-    </div>
-    <div>
-      <button class="btn merah-minus" onclick="ubahSkor('merah', -1)">-1</button>
-      <button class="btn merah-minus" onclick="ubahSkor('merah', -2)">-2</button>
-      <button class="btn merah-minus" onclick="ubahSkor('merah', -3)">-3</button>
+    <h2>Skor Pesilat Merah</h2>
+    <div class="btn-group">
+      <button class="btn-merah" onclick="tambahSkor('merah', 1)">+1</button>
+      <button class="btn-merah" onclick="tambahSkor('merah', 2)">+2</button>
+      <button class="btn-merah" onclick="tambahSkor('merah', 3)">+3</button>
     </div>
   </div>
 
   <div class="section">
-    <h3>Skor Biru</h3>
-    <div>
-      <button class="btn biru" onclick="ubahSkor('biru', 1)">+1</button>
-      <button class="btn biru" onclick="ubahSkor('biru', 2)">+2</button>
-      <button class="btn biru" onclick="ubahSkor('biru', 3)">+3</button>
-    </div>
-    <div>
-      <button class="btn biru-minus" onclick="ubahSkor('biru', -1)">-1</button>
-      <button class="btn biru-minus" onclick="ubahSkor('biru', -2)">-2</button>
-      <button class="btn biru-minus" onclick="ubahSkor('biru', -3)">-3</button>
+    <h2>Skor Pesilat Biru</h2>
+    <div class="btn-group">
+      <button class="btn-biru" onclick="tambahSkor('biru', 1)">+1</button>
+      <button class="btn-biru" onclick="tambahSkor('biru', 2)">+2</button>
+      <button class="btn-biru" onclick="tambahSkor('biru', 3)">+3</button>
     </div>
   </div>
 
   <div class="section">
-    <button onclick="reset()">Reset Semua</button>
+    <button class="btn-reset" onclick="reset()">🔄 Reset Semua</button>
   </div>
 
   <script>
-    function ubahSkor(warna, nilai) {
+    function tambahSkor(warna, nilai) {
       let key = 'skor_' + warna;
-      let skor = parseInt(localStorage.getItem(key)) || 0;
-      skor += nilai;
-      if (skor < 0) skor = 0;
-      localStorage.setItem(key, skor);
+      let current = parseInt(localStorage.getItem(key)) || 0;
+      localStorage.setItem(key, current + nilai);
     }
 
     function setNama() {
@@ -86,8 +135,9 @@
 
     function reset() {
       localStorage.clear();
-      alert("Skor & nama sudah direset");
+      alert("Skor dan nama pesilat telah direset.");
     }
   </script>
+
 </body>
 </html>
