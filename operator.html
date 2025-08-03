@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Operator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 15px;
+      font-size: 18px;
+      width: 100%;
+      background: #007166;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005f57;
+    }
+  </style>
+</head>
+<body>
+  <h1>Panel Operator</h1>
+
+  <label for="nama_merah">Nama Pesilat Merah</label>
+  <input type="text" id="nama_merah" placeholder="Contoh: ANDI SETIAWAN">
+
+  <label for="perguruan_merah">Perguruan Merah</label>
+  <input type="text" id="perguruan_merah" placeholder="Contoh: PERISAI DIRI">
+
+  <label for="nama_biru">Nama Pesilat Biru</label>
+  <input type="text" id="nama_biru" placeholder="Contoh: BUDI PRATAMA">
+
+  <label for="perguruan_biru">Perguruan Biru</label>
+  <input type="text" id="perguruan_biru" placeholder="Contoh: TAPAK SUCI">
+
+  <label for="ronde">Ronde</label>
+  <input type="number" id="ronde" placeholder="Contoh: 1" min="1" max="3">
+
+  <label for="marquee">Teks Berjalan</label>
+  <input type="text" id="marquee" placeholder="Contoh: Kejurda IPSI Situbondo 2025">
+
+  <button onclick="simpan()">💾 Simpan</button>
+
+  <script>
+    function simpan() {
+      localStorage.setItem('nama_merah', document.getElementById('nama_merah').value);
+      localStorage.setItem('perguruan_merah', document.getElementById('perguruan_merah').value);
+      localStorage.setItem('nama_biru', document.getElementById('nama_biru').value);
+      localStorage.setItem('perguruan_biru', document.getElementById('perguruan_biru').value);
+      localStorage.setItem('ronde', document.getElementById('ronde').value);
+      localStorage.setItem('marquee', document.getElementById('marquee').value);
+      alert("✅ Data berhasil disimpan!");
+    }
+  </script>
+</body>
+</html>
