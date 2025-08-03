@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel Operator</title>
   <style>
     body {
@@ -14,6 +14,7 @@
     }
     h1 {
       text-align: center;
+      margin-bottom: 30px;
     }
     label {
       display: block;
@@ -33,18 +34,28 @@
       padding: 15px;
       font-size: 18px;
       width: 100%;
-      background: #007166;
-      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
     }
-    button:hover {
-      background: #005f57;
+    .btn-simpan {
+      background: #007166;
+      color: white;
+    }
+    .btn-simpan:hover {
+      background: #005a50;
+    }
+    .btn-cetak {
+      background: #222;
+      color: #fff;
+    }
+    .btn-cetak:hover {
+      background: #000;
     }
   </style>
 </head>
 <body>
+
   <h1>Panel Operator</h1>
 
   <label for="nama_merah">Nama Pesilat Merah</label>
@@ -65,7 +76,11 @@
   <label for="marquee">Teks Berjalan</label>
   <input type="text" id="marquee" placeholder="Contoh: Kejurda IPSI Situbondo 2025">
 
-  <button onclick="simpan()">💾 Simpan</button>
+  <button class="btn-simpan" onclick="simpan()">💾 Simpan</button>
+  <button class="btn-cetak" onclick="cetakPDF()">📄 Cetak Hasil PDF</button>
+
+  <!-- jsPDF CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
     function simpan() {
@@ -75,8 +90,53 @@
       localStorage.setItem('perguruan_biru', document.getElementById('perguruan_biru').value);
       localStorage.setItem('ronde', document.getElementById('ronde').value);
       localStorage.setItem('marquee', document.getElementById('marquee').value);
-      alert("✅ Data berhasil disimpan!");
+      alert("✅ Data berhasil disimpan ke sistem!");
+    }
+
+    function getValidSkor(warna) {
+      let total = 0;
+      let count = 0;
+      for (let i = 1; i <= 3; i++) {
+        const nilai = parseInt(localStorage.getItem(`skor_${warna}_juri${i}`));
+        if (!isNaN(nilai)) {
+          total += nilai;
+          count++;
+        }
+      }
+      return count >= 2 ? Math.round(total / count) : 0;
+    }
+
+    async function cetakPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const namaMerah = localStorage.getItem('nama_merah') || 'MERAH';
+      const perguruanMerah = localStorage.getItem('perguruan_merah') || '-';
+      const namaBiru = localStorage.getItem('nama_biru') || 'BIRU';
+      const perguruanBiru = localStorage.getItem('perguruan_biru') || '-';
+      const ronde = localStorage.getItem('ronde') || '1';
+      const skorMerah = getValidSkor('merah');
+      const skorBiru = getValidSkor('biru');
+      const now = new Date().toLocaleString('id-ID');
+
+      doc.setFontSize(18);
+      doc.text("HASIL PERTANDINGAN PENCAK SILAT", 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Tanggal & Waktu: ${now}`, 20, 30);
+      doc.text(`Ronde: ${ronde}`, 20, 40);
+      doc.text(`MERAH: ${namaMerah} (${perguruanMerah}) — Skor: ${skorMerah}`, 20, 55);
+      doc.text(`BIRU : ${namaBiru} (${perguruanBiru}) — Skor: ${skorBiru}`, 20, 65);
+
+      const hasil = skorMerah > skorBiru ? `Pemenang: MERAH (${namaMerah})` :
+                    skorBiru > skorMerah ? `Pemenang: BIRU (${namaBiru})` :
+                    "Hasil: SERI";
+
+      doc.setFontSize(14);
+      doc.text(hasil, 20, 85);
+
+      doc.save(`hasil_${namaMerah}_vs_${namaBiru}.pdf`);
     }
   </script>
+
 </body>
 </html>
