@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dewan Juri - ZBond Score</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .kontrol {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .box {
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 20px;
+      width: 45%;
+      margin-bottom: 20px;
+      background: #111;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .red { background: red; color: white; }
+    .blue { background: blue; color: white; }
+    .orange { background: orange; color: black; }
+    .gray { background: gray; color: white; }
+    .green { background: green; color: white; }
+
+    .status {
+      margin-top: 10px;
+      font-size: 16px;
+      background: rgba(255,255,255,0.1);
+      padding: 5px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Dewan Juri - Pengaturan Teguran, Pelanggaran, Diskualifikasi & Bantingan</h2>
+
+  <div class="kontrol">
+    <div class="box red">
+      <h3>Pesilat Merah</h3>
+      <button class="orange" onclick="setStatus('merah', 'teguran', 1)">Teguran 1</button>
+      <button class="orange" onclick="setStatus('merah', 'teguran', 2)">Teguran 2</button>
+      <button class="orange" onclick="setStatus('merah', 'teguran', 3)">Teguran 3</button>
+      <button class="gray" onclick="beriPelanggaran('merah')">Pelanggaran</button>
+      <button class="green" onclick="beriBantingan('merah')">Bantingan</button>
+      <button class="green" onclick="setStatus('merah', 'diskualifikasi', 1)">Diskualifikasi</button>
+      <div class="status" id="statusMerah">Status: -</div>
+    </div>
+
+    <div class="box blue">
+      <h3>Pesilat Biru</h3>
+      <button class="orange" onclick="setStatus('biru', 'teguran', 1)">Teguran 1</button>
+      <button class="orange" onclick="setStatus('biru', 'teguran', 2)">Teguran 2</button>
+      <button class="orange" onclick="setStatus('biru', 'teguran', 3)">Teguran 3</button>
+      <button class="gray" onclick="beriPelanggaran('biru')">Pelanggaran</button>
+      <button class="green" onclick="beriBantingan('biru')">Bantingan</button>
+      <button class="green" onclick="setStatus('biru', 'diskualifikasi', 1)">Diskualifikasi</button>
+      <div class="status" id="statusBiru">Status: -</div>
+    </div>
+  </div>
+
+  <script>
+    function setStatus(warna, tipe, nilai) {
+      const key = tipe + '_' + warna;
+      localStorage.setItem(key, nilai);
+      updateTampilan();
+    }
+
+    function beriPelanggaran(warna) {
+      const key = 'pelanggaran_' + warna;
+      let jumlah = parseInt(localStorage.getItem(key) || 0);
+      localStorage.setItem(key, jumlah + 1);
+
+      // Kurangi nilai lawan
+      const lawan = warna === 'merah' ? 'biru' : 'merah';
+      const skorLawanKey = 'skor_' + lawan;
+      let skorLawan = parseInt(localStorage.getItem(skorLawanKey) || 0);
+      skorLawan = Math.max(0, skorLawan - 1);
+      localStorage.setItem(skorLawanKey, skorLawan);
+
+      updateTampilan();
+    }
+
+    function beriBantingan(warna) {
+      const skorKey = 'skor_' + warna;
+      let skor = parseInt(localStorage.getItem(skorKey) || 0);
+      skor += 3;
+      localStorage.setItem(skorKey, skor);
+      updateTampilan();
+    }
+
+    function updateTampilan() {
+      const teguran_merah = localStorage.getItem('teguran_merah') || '-';
+      const pelanggaran_merah = localStorage.getItem('pelanggaran_merah') || '-';
+      const diskualifikasi_merah = localStorage.getItem('diskualifikasi_merah') === '1' ? 'Diskualifikasi' : '-';
+
+      const teguran_biru = localStorage.getItem('teguran_biru') || '-';
+      const pelanggaran_biru = localStorage.getItem('pelanggaran_biru') || '-';
+      const diskualifikasi_biru = localStorage.getItem('diskualifikasi_biru') === '1' ? 'Diskualifikasi' : '-';
+
+      document.getElementById('statusMerah').innerText =
+        `Teguran ${teguran_merah}, Pelanggaran ${pelanggaran_merah}, ${diskualifikasi_merah}`;
+      document.getElementById('statusBiru').innerText =
+        `Teguran ${teguran_biru}, Pelanggaran ${pelanggaran_biru}, ${diskualifikasi_biru}`;
+    }
+
+    setInterval(updateTampilan, 500);
+  </script>
+</body>
+</html>
