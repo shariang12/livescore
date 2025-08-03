@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Peserta & Acak Pertandingan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      width: calc(50% - 22px);
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      font-size: 16px;
+      background: #007166;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005f57;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    .vs {
+      font-weight: bold;
+      text-align: center;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Data Peserta & Acak Pertandingan</h1>
+
+<input type="text" id="nama" placeholder="Nama Pesilat">
+<input type="text" id="perguruan" placeholder="Perguruan">
+<br>
+<button onclick="tambahPeserta()">➕ Tambah Peserta</button>
+<button onclick="acakPertandingan()">🎲 Acak Pertandingan</button>
+<button onclick="resetData()">♻️ Reset</button>
+
+<table id="tabelPeserta">
+  <thead>
+    <tr>
+      <th>Nama Pesilat</th>
+      <th>Perguruan</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="vs" id="hasilVs"></div>
+
+<script>
+  let peserta = JSON.parse(localStorage.getItem('peserta_silat')) || [];
+
+  function simpanLocal() {
+    localStorage.setItem('peserta_silat', JSON.stringify(peserta));
+    tampilkanPeserta();
+  }
+
+  function tambahPeserta() {
+    const nama = document.getElementById('nama').value.trim();
+    const perguruan = document.getElementById('perguruan').value.trim();
+    if (!nama || !perguruan) return alert("❗Isi nama & perguruan terlebih dahulu.");
+
+    peserta.push({ nama, perguruan });
+    document.getElementById('nama').value = '';
+    document.getElementById('perguruan').value = '';
+    simpanLocal();
+  }
+
+  function tampilkanPeserta() {
+    const tbody = document.querySelector('#tabelPeserta tbody');
+    tbody.innerHTML = '';
+    peserta.forEach(p => {
+      const row = `<tr><td>${p.nama}</td><td>${p.perguruan}</td></tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+
+  function acakPertandingan() {
+    if (peserta.length < 2) {
+      alert("❗Minimal 2 peserta dibutuhkan.");
+      return;
+    }
+
+    const list = [...peserta];
+    shuffle(list);
+
+    let hasil = "<h2>Hasil Pertandingan</h2>";
+    for (let i = 0; i < list.length; i += 2) {
+      if (i + 1 < list.length) {
+        hasil += `<p>${list[i].nama} (${list[i].perguruan}) <strong>VS</strong> ${list[i + 1].nama} (${list[i + 1].perguruan})</p>`;
+
+        if (i === 0) {
+          // ⏬ Simpan pasangan pertama ke Live Score
+          localStorage.setItem('nama_merah', list[i].nama);
+          localStorage.setItem('perguruan_merah', list[i].perguruan);
+          localStorage.setItem('nama_biru', list[i + 1].nama);
+          localStorage.setItem('perguruan_biru', list[i + 1].perguruan);
+          localStorage.setItem('ronde', '1');
+        }
+
+      } else {
+        hasil += `<p>${list[i].nama} (${list[i].perguruan}) <strong>Menunggu lawan</strong></p>`;
+      }
+    }
+
+    document.getElementById('hasilVs').innerHTML = hasil;
+    alert("✅ Pertandingan pertama telah diatur ke sistem Live Score!");
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  function resetData() {
+    if (confirm("Yakin reset semua data peserta?")) {
+      peserta = [];
+      simpanLocal();
+      document.getElementById('hasilVs').innerHTML = '';
+    }
+  }
+
+  // Tampilkan saat awal buka
+  tampilkanPeserta();
+</script>
+
+</body>
+</html>
