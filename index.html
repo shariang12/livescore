@@ -1,26 +1,108 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Live Score Pencak Silat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Score IPSI - TV Display</title>
   <style>
-    body { font-family: Arial; text-align: center; background: #000; color: #fff; }
-    .kotak { display: flex; justify-content: space-around; font-size: 32px; margin-top: 50px; }
-    .pesilat { width: 40%; padding: 20px; border-radius: 15px; }
-    .merah { background: red; }
-    .biru { background: blue; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Arial Black', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .marquee {
+      background: #111;
+      color: #0f0;
+      padding: 12px;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: calc(100vh - 100px);
+      padding: 0 20px;
+    }
+
+    .corner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 60px;
+      border-radius: 20px;
+    }
+
+    .merah { background-color: red; }
+    .biru  { background-color: blue; }
+
+    .nama {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .skor {
+      font-size: 120px;
+      font-weight: bold;
+    }
+
+    .ronde-box {
+      width: 200px;
+      height: 200px;
+      background: #fff;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .nama { font-size: 28px; }
+      .skor { font-size: 80px; }
+      .ronde-box {
+        width: 120px;
+        height: 120px;
+        font-size: 20px;
+      }
+      .marquee { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
-  <h1>Live Score Pencak Silat</h1>
-  <div class="kotak">
-    <div class="pesilat merah">
-      <div id="namaMerah">Merah</div>
-      <div id="skorMerah">0</div>
+
+  <div class="marquee">
+    <marquee behavior="scroll" direction="left">
+      ⚔️ Kejurda IPSI Situbondo 2025 | Kelas C Putra - Ronde <span id="rondeText">1</span> | Arena 1
+    </marquee>
+  </div>
+
+  <div class="scoreboard">
+    <div class="corner merah">
+      <div class="nama" id="namaMerah">MERAH</div>
+      <div class="skor" id="skorMerah">0</div>
     </div>
-    <div class="pesilat biru">
-      <div id="namaBiru">Biru</div>
-      <div id="skorBiru">0</div>
+
+    <div class="ronde-box">
+      RONDE<br>
+      <span id="rondeBox">1</span>
+    </div>
+
+    <div class="corner biru">
+      <div class="nama" id="namaBiru">BIRU</div>
+      <div class="skor" id="skorBiru">0</div>
     </div>
   </div>
 
@@ -28,10 +110,15 @@
     function updateTampilan() {
       document.getElementById('skorMerah').innerText = localStorage.getItem('skor_merah') || 0;
       document.getElementById('skorBiru').innerText = localStorage.getItem('skor_biru') || 0;
-      document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah') || 'Merah';
-      document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru') || 'Biru';
+      document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah')?.toUpperCase() || 'MERAH';
+      document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru')?.toUpperCase() || 'BIRU';
+      const ronde = localStorage.getItem('ronde') || 1;
+      document.getElementById('rondeBox').innerText = ronde;
+      document.getElementById('rondeText').innerText = ronde;
     }
-    setInterval(updateTampilan, 500);
+
+    setInterval(updateTampilan, 300);
   </script>
+
 </body>
 </html>
