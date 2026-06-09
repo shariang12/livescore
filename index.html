@@ -1,202 +1,322 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>ZBond Score | Live Score</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Shariang Dev • Watermark Foto</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial Black', sans-serif;
-      background: #000;
-      color: #fff;
-      overflow: hidden;
-    }
-
-    .marquee {
-      background: #111;
-      color: #0f0;
-      font-size: 28px;
-      padding: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .marquee span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 20s linear infinite;
-    }
-
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-
-    .scoreboard {
-      display: grid;
-      grid-template-columns: 1fr 0.5fr 1fr;
-      height: calc(100vh - 60px);
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0A0A0A;
+      min-height: 100vh;
+      display: flex;
       align-items: center;
-      text-align: center;
+      justify-content: center;
+      padding: 16px;
+      color: #E8E8E8;
     }
-
-    .pesilat {
-      padding: 20px;
-    }
-
-    .merah {
-      background: red;
-      height: 100%;
-    }
-
-    .biru {
-      background: blue;
-      height: 100%;
-    }
-
-    .pesilat .perguruan {
-      font-size: 32px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .pesilat .nama {
-      font-size: 48px;
-    }
-
-    .pesilat .skor {
-      font-size: 120px;
-      margin-top: 20px;
-    }
-
-    .status {
-      font-size: 20px;
-      margin-top: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 10px;
-      border-radius: 10px;
-    }
-
-    .tengah {
-      background: #000;
-      color: #fff;
-      height: 100%;
+    .container {
+      width: 100%;
+      max-width: 420px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      gap: 16px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      background: linear-gradient(180deg, #E8E8E8, #A0A0A0, #707070);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+      letter-spacing: 0.5px;
+    }
+    h1 span {
+      background: linear-gradient(180deg, #C5834A, #B87333, #8B4C1C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Upload area */
+    .upload-area {
+      background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+      border: 2px dashed rgba(184,115,51,0.5);
+      border-radius: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.7);
+    }
+    .upload-area:active {
+      border-color: #FF1744;
+      box-shadow: 0 0 20px rgba(255,23,68,0.3);
+    }
+    .upload-area i {
+      font-size: 2.5rem;
+      color: #B87333;
+      margin-bottom: 8px;
+    }
+    .upload-area p {
+      font-size: 0.75rem;
+      color: #999;
+    }
+    .upload-area .btn-pick {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: linear-gradient(145deg, #B87333, #8B4C1C);
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      letter-spacing: 0.3px;
+    }
+
+    /* Preview */
+    .preview-wrapper {
+      position: relative;
+      display: none;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(255,23,68,0.2);
+      border: 1px solid rgba(192,192,192,0.2);
+    }
+    .preview-wrapper.show { display: block; }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      text-decoration: none;
+      display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-download {
+      background: linear-gradient(145deg, #FF1744, #b01030);
+      color: #fff;
+      animation: dangerPulse 2s infinite;
+    }
+    @keyframes dangerPulse {
+      0%, 100% { box-shadow: 0 0 8px #FF1744, 0 0 16px rgba(255,23,68,0.5); }
+      50% { box-shadow: 0 0 20px #FF1744, 0 0 40px rgba(255,23,68,0.8); }
+    }
+    .btn-reset {
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      color: #ccc;
+      border: 1px solid rgba(192,192,192,0.2);
+    }
+    .btn:active { transform: scale(0.95); }
+
+    /* Info */
+    .info-text {
+      text-align: center;
+      font-size: 0.65rem;
+      color: #666;
     }
 
-    .tengah .ronde {
-      font-size: 60px;
-      margin-bottom: 20px;
+    input[type="file"] { display: none; }
+
+    /* Loading */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 10px;
+      color: #B87333;
+      font-size: 0.7rem;
     }
-
-    .tengah .timer {
-      font-size: 80px;
-      font-weight: bold;
-    }
-
-    @media (max-width: 768px) {
-      .scoreboard {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 0.5fr 1fr;
-      }
-
-      .pesilat .skor {
-        font-size: 80px;
-      }
-
-      .tengah .ronde {
-        font-size: 40px;
-      }
-
-      .tengah .timer {
-        font-size: 60px;
-      }
-    }
+    .loading.show { display: block; }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+  <div class="container">
+    <h1>SHARIANG<span>DEV</span> • Watermark</h1>
 
-  <div class="marquee"><span id="marqueeText">SELAMAT DATANG DI KEJUARAAN PENCAK SILAT</span></div>
+    <!-- Upload -->
+    <div class="upload-area" id="uploadArea">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>Ketuk untuk pilih foto</p>
+      <span class="btn-pick"><i class="fas fa-image"></i> Pilih Foto</span>
+    </div>
+    <input type="file" id="fileInput" accept="image/*">
 
-  <div class="scoreboard">
-    <!-- Pesilat Merah -->
-    <div class="pesilat merah">
-      <div class="perguruan" id="perguruanMerah">Perguruan Merah</div>
-      <div class="nama" id="namaMerah">MERAH</div>
-      <div class="skor" id="skorMerah">0</div>
-      <div class="status" id="statusMerah">-</div>
+    <!-- Loading -->
+    <div class="loading" id="loading">
+      <i class="fas fa-spinner fa-spin"></i> Memproses foto...
     </div>
 
-    <!-- Tengah -->
-    <div class="tengah">
-      <div class="ronde">RONDE <span id="ronde">1</span></div>
-      <div class="timer" id="timer">00:00</div>
+    <!-- Preview -->
+    <div class="preview-wrapper" id="previewWrapper">
+      <canvas id="canvas"></canvas>
     </div>
 
-    <!-- Pesilat Biru -->
-    <div class="pesilat biru">
-      <div class="perguruan" id="perguruanBiru">Perguruan Biru</div>
-      <div class="nama" id="namaBiru">BIRU</div>
-      <div class="skor" id="skorBiru">0</div>
-      <div class="status" id="statusBiru">-</div>
+    <!-- Buttons -->
+    <div class="btn-group" id="btnGroup" style="display:none;">
+      <a class="btn btn-download" id="btnDownload" download="ShariangDev_Watermark.jpg">
+        <i class="fas fa-download"></i> Simpan
+      </a>
+      <button class="btn btn-reset" id="btnReset">
+        <i class="fas fa-redo"></i> Ganti Foto
+      </button>
     </div>
+    <p class="info-text">Watermark otomatis ditambahkan • Siap download</p>
   </div>
 
   <script>
-    function updateTampilan() {
-      document.getElementById('skorMerah').innerText = localStorage.getItem('skor_merah') || 0;
-      document.getElementById('skorBiru').innerText = localStorage.getItem('skor_biru') || 0;
-      document.getElementById('namaMerah').innerText = localStorage.getItem('pesilat_merah') || 'MERAH';
-      document.getElementById('namaBiru').innerText = localStorage.getItem('pesilat_biru') || 'BIRU';
-      document.getElementById('perguruanMerah').innerText = localStorage.getItem('perguruan_merah') || 'Perguruan Merah';
-      document.getElementById('perguruanBiru').innerText = localStorage.getItem('perguruan_biru') || 'Perguruan Biru';
-      document.getElementById('ronde').innerText = localStorage.getItem('ronde') || '1';
-      document.getElementById('marqueeText').innerText = localStorage.getItem('marquee') || 'KEJUARAAN PENCAK SILAT NASIONAL';
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const previewWrapper = document.getElementById('previewWrapper');
+    const btnGroup = document.getElementById('btnGroup');
+    const btnDownload = document.getElementById('btnDownload');
+    const btnReset = document.getElementById('btnReset');
+    const loading = document.getElementById('loading');
 
-      // Status Dewan
-      const statusMerah = formatStatus(
-        localStorage.getItem('teguran_merah'),
-        localStorage.getItem('pelanggaran_merah'),
-        localStorage.getItem('diskualifikasi_merah')
-      );
-      const statusBiru = formatStatus(
-        localStorage.getItem('teguran_biru'),
-        localStorage.getItem('pelanggaran_biru'),
-        localStorage.getItem('diskualifikasi_biru')
-      );
-      document.getElementById('statusMerah').innerText = statusMerah;
-      document.getElementById('statusBiru').innerText = statusBiru;
+    // Logo transparan Shariang Dev (base64 PNG)
+    const logoURL = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwD7OaY1lOhYvG-Dj4xpt0W2502Umsr_sLXpxgQhPclwFe8H8ZJ4otZh68TfBC9fK4esNN_eKqY4PwxZANNhOznTqgba3zYhzYaUnUL3Mz6kzsyYNQaycjZ2wsL-x5H89BipI7Mtv6Mn-_waxwVRswD_KDHM3Iec28K7Zpdmj2CnRaed2qOyznAHkL8yQ/s1512/1000510137.png';
+
+    const logoImage = new Image();
+    logoImage.crossOrigin = 'anonymous';
+    logoImage.src = logoURL;
+
+    // Buka file picker
+    uploadArea.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFile);
+
+    function handleFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      loading.classList.add('show');
+      uploadArea.style.display = 'none';
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          drawWatermark(img);
+          loading.classList.remove('show');
+          previewWrapper.classList.add('show');
+          btnGroup.style.display = 'flex';
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
-    function updateTimer() {
-      let waktu = parseInt(localStorage.getItem('waktu_aktif') || 0);
-      let menit = Math.floor(waktu / 60);
-      let detik = waktu % 60;
-      document.getElementById('timer').innerText =
-        (menit < 10 ? '0' + menit : menit) + ':' + (detik < 10 ? '0' + detik : detik);
+    function drawWatermark(img) {
+      // Ukuran canvas
+      const maxWidth = 420;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth) {
+        const ratio = maxWidth / width;
+        width = maxWidth;
+        height = Math.round(img.height * ratio);
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Gambar foto asli
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Ukuran logo (15% dari lebar canvas)
+      const logoSize = Math.round(width * 0.18);
+      const logoX = width - logoSize - 12;
+      const logoY = height - logoSize - 12;
+
+      // Background semi-transparan hitam di belakang logo
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+      ctx.beginPath();
+      ctx.roundRect(logoX - 4, logoY - 4, logoSize + 8, logoSize + 8, 8);
+      ctx.fill();
+
+      // Gambar logo transparan
+      if (logoImage.complete && logoImage.naturalWidth > 0) {
+        ctx.drawImage(logoImage, logoX, logoY, logoSize, logoSize);
+      }
+
+      // Garis bawah watermark
+      const lineY = logoY - 10;
+      ctx.strokeStyle = 'rgba(255, 23, 68, 0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(width - logoSize - 20, lineY);
+      ctx.lineTo(width - 8, lineY);
+      ctx.stroke();
+
+      // Teks "SHARIANG DEV"
+      ctx.fillStyle = '#E8E8E8';
+      ctx.font = `bold ${Math.round(width * 0.028)}px Inter, sans-serif`;
+      ctx.textAlign = 'right';
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 4;
+      ctx.fillText('SHARIANG DEV', width - 12, lineY - 6);
+      ctx.shadowBlur = 0;
+
+      // Teks kecil
+      ctx.fillStyle = '#B87333';
+      ctx.font = `${Math.round(width * 0.02)}px Inter, sans-serif`;
+      ctx.fillText('EXCELLENT SERVICES', width - 12, lineY + 12);
+
+      // Update download link
+      btnDownload.href = canvas.toDataURL('image/jpeg', 0.92);
     }
 
-    function formatStatus(teguran, pelanggaran, diskualifikasi) {
-      let status = [];
-      if (teguran) status.push("Teguran " + teguran);
-      if (pelanggaran) status.push("Pelanggaran " + pelanggaran);
-      if (diskualifikasi === '1') status.push("Diskualifikasi");
-      return status.length ? status.join(', ') : '-';
-    }
+    // Reset
+    btnReset.addEventListener('click', () => {
+      previewWrapper.classList.remove('show');
+      btnGroup.style.display = 'none';
+      uploadArea.style.display = 'block';
+      fileInput.value = '';
+    });
 
-    setInterval(() => {
-      updateTampilan();
-      updateTimer();
-    }, 500);
+    // Polyfill roundRect untuk browser lama
+    if (!ctx.roundRect) {
+      ctx.roundRect = function(x, y, w, h, r) {
+        if (typeof r === 'number') r = { tl: r, tr: r, br: r, bl: r };
+        ctx.beginPath();
+        ctx.moveTo(x + r.tl, y);
+        ctx.lineTo(x + w - r.tr, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r.tr);
+        ctx.lineTo(x + w, y + h - r.br);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r.br, y + h);
+        ctx.lineTo(x + r.bl, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r.bl);
+        ctx.lineTo(x, y + r.tl);
+        ctx.quadraticCurveTo(x, y, x + r.tl, y);
+        ctx.closePath();
+      };
+    }
   </script>
 </body>
 </html>
